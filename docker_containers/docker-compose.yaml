@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  postgres_supertokens:
+    image: postgres:latest
+    container_name: postgres_supertokens
+    environment:
+      POSTGRES_USER: supertokens_user
+      POSTGRES_PASSWORD: supertokens_password
+      POSTGRES_DB: supertokens_db
+    volumes:
+      - postgres_supertokens_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  postgres_external:
+    image: postgres:latest
+    container_name: postgres_external
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_external_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+      
+  supertokens:
+    image: supertokens/supertokens-postgresql
+    container_name: supertokens
+    environment:
+      POSTGRESQL_USER: supertokens_user
+      POSTGRESQL_PASSWORD: supertokens_password
+      POSTGRESQL_HOST: postgres_supertokens
+      POSTGRESQL_PORT: 5432
+      POSTGRESQL_DATABASE_NAME: supertokens_db
+      SUPERTOKENS_API_KEY: abracadabra
+    depends_on:
+      - postgres_supertokens
+    ports:
+      - "3567:3567"
+    networks:
+      - app_network
+
+volumes:
+  postgres_supertokens_data:
+  postgres_external_data:
+
+networks:
+  app_network:
+    driver: bridge
