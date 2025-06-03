@@ -58,7 +58,7 @@ public class RequestService {
             throw new ResourceNotFoundException("Device with id " + requestDevicePayload.getDeviceId() + " does not exist");
         }
         Request request = new Request(user, device, requestDevicePayload.getUnits());
-        requestRepository.save(request);
+        request = requestRepository.save(request);
         device.getRequests().add(request);
         deviceService.saveDevice(device);
         user.getRequests().add(request);

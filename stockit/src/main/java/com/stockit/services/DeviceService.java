@@ -41,8 +41,10 @@ public class DeviceService {
     public Boolean addStock(Long id, Long stock) {
         Device device = deviceRepository.findById(id).orElse(null);
         if (device != null) {
+            System.out.println(device.getStock());
             device.setStock(device.getStock() + stock);
             deviceRepository.save(device);
+            System.out.println(device.getStock() + " " + device.getName());
             return true;
         }
         return false;
@@ -82,14 +84,19 @@ public class DeviceService {
 
     public Long getStock(Long id) {
         Device device = deviceRepository.findById(id).orElse(null);
+
         if (device != null) {
+            System.out.println(device.getStock() + " " + device.getName());
             return device.getStock();
         }
         return null;
     }
 
-    public List<Device> getAllDevices() {
-        return deviceRepository.findAll();
+    //
+
+    public List<RecordDevice> getAllDevices() {
+        return deviceRepository.findAll().stream().map(a -> new RecordDevice(a.getId(), a.getShops().stream().map(b -> b.getWebsite()).toList(),
+                a.getName(), a.getDescription(), a.getStock())).toList();
     }
 
 

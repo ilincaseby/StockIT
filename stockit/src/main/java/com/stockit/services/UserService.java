@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -43,5 +45,19 @@ public class UserService {
 
     public void saveUser(User user) {
         userRepository.save(user);
+    }
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
+    public List<String> adminEmails() {
+        List<String> emails = new ArrayList<>();
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            if (user.getRole().getName().equals("admin")) {
+                emails.add(user.getEmail());
+            }
+        }
+        return emails;
     }
 }

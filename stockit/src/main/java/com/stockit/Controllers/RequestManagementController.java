@@ -22,12 +22,16 @@ import java.util.List;
 public class RequestManagementController {
     private final RequestService requestService;
     private final UserService userService;
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/getRequests")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getRequests() {
-        return ResponseEntity.ok(requestService.getAllRequests());
+        List<RequestService. RecordRequest> list = requestService.getAllRequests();
+        return ResponseEntity.ok(list);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping("/responseRequest/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> responseRequest(@PathVariable Long id, @RequestParam Boolean approved) {
@@ -35,6 +39,7 @@ public class RequestManagementController {
         return ResponseEntity.ok("Request " + (approved ? "approved" : "denied"));
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/requestDevice")
     public ResponseEntity<?> requestDevice(@RequestBody RequestDevicePayload requestDevicePayload) {
         String uid = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -46,6 +51,7 @@ public class RequestManagementController {
         return ResponseEntity.ok("Request added");
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/getMyRequests")
     public ResponseEntity<?> getMyRequests() {
         String uid = SecurityContextHolder.getContext().getAuthentication().getName();
